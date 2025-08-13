@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AppleWatch_Notes_app.Models;
+using AppleWatch_Notes_app.Services;
 
 namespace AppleWatch_Notes_app.Controllers
 {
@@ -11,12 +13,9 @@ namespace AppleWatch_Notes_app.Controllers
     [Route("[notes]")]
     public class NotesMaking : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
 
         private readonly ILogger<NotesMaking> _logger;
+        private NoteService noteService = new NoteService();
 
         public NotesMaking(ILogger<NotesMaking> logger)
         {
@@ -24,21 +23,28 @@ namespace AppleWatch_Notes_app.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<string> Get()
+        public Note Get()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
-        }
+            //return all notes
 
-        public IEnumerable<string> Post()
+
+        }
+        [HttpPost]
+        public Note Post()
         {
 
         }
+        [HttpDelete]
+        public IEnumerable<string> Delete()
+        {
+
+        }
+        [HttpPatch("{noteName}")]
+        public Note Patch(string noteName) {
+
+            return noteService.updateNoteByName(noteName);
+
+        }
+
     }
 }
