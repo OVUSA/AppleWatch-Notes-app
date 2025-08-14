@@ -12,5 +12,19 @@ namespace AppleWatch_Notes_app.Models
         
         IEnumerable<Note> personalNotes;
 
+        public User(string userName, string userId = "userId1")
+        {
+            Name = userName;
+            userId =  (userName + generateUserId()).ToString();
+            personalNotes = new IEnumerable<Note>
+        }
+
+
+        public int generateUserId()
+        {
+            Random random = new Random();
+            return random.Next(100);
+        }
+
     }
 }
