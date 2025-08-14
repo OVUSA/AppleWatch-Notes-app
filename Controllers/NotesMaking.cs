@@ -2,8 +2,6 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AppleWatch_Notes_app.Models;
 using AppleWatch_Notes_app.Services;
 
@@ -23,27 +21,35 @@ namespace AppleWatch_Notes_app.Controllers
         }
 
         [HttpGet]
-        public Note Get()
+        public IEnumerable <Note> Get(User userName)
         {
-            //return all notes
+            return noteService.allUserNotes(userName.userId);
 
 
         }
         [HttpPost]
-        public Note Post()
+        public Note Post(string noteName, string? content, User userName)
         {
-
+           return noteService.createNewNote(noteName,content,userName.userId );
         }
-        [HttpDelete]
-        public IEnumerable<string> Delete()
-        {
 
+        [HttpDelete]
+        public IActionResult  Delete(string noteName, User userName)
+        {
+            if(noteService.deleteNote(noteName, userName.userId))
+            {
+                return Ok("Note deleted successfully");
+            }
+            else
+            {
+                return NotFound($"The note with {noteName} wasn't found. Try again");
+            }
+            
         }
         [HttpPatch("{noteName}")]
-        public Note Patch(string noteName) {
-
-            return noteService.updateNoteByName(noteName);
-
+        public Note Patch(string noteName, User userName)
+        {
+            return noteService.updateNoteByName(noteName,userName.userId);
         }
 
     }
