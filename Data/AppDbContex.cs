@@ -8,8 +8,8 @@ namespace AppleWatch_Notes_app.Data
 {
     public class AppDbContex
     {
-
-        public IEnumerable<User> existingData()
+        List<User> allUsers = new List<User>();
+        public  AppDbContex()
         {
             User user1 = new User("Olya");
             Note myNote = new Note();
@@ -17,16 +17,29 @@ namespace AppleWatch_Notes_app.Data
 
             User user2 = new User("Mary");
             Note user2Notes = new Note();
+            user2.personalNotes.Intersect((IEnumerable<Note>)user2Notes);
             myNote.Name = "movie recomendations";
             myNote.content = "1.Constantin 2.The Shining 3.Sleepy Hollow";
 
-            IEnumerable<User> allUsers = new List<User>();
+            
             allUsers.Intersect((IEnumerable<User>)user1);
             allUsers.Intersect((IEnumerable<User>)user2);
 
-            return allUsers;
-
         }
+
+        public Boolean deleteNote(string noteName, string userId)
+        {
+            User userWithNote = allUsers.FirstOrDefault(user => user.userId == userId);
+            Note noteToDelete = userWithNote.personalNotes.FirstOrDefault(n => n.Name == noteName);
+            if(noteToDelete!= null)
+            {
+                userWithNote.personalNotes.Remove(noteToDelete);
+            }
+            return true;
+        }
+
+
+
 
     }
 }
