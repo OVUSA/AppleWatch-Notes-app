@@ -20,7 +20,7 @@ namespace AppleWatch_Notes_app.Services
 
         public Note createNewNote(string userId, string? content, string noteName)
         {
-            throw new NotImplementedException();
+            return _context.createNote(userId, content, noteName);
         }
 
         public Boolean deleteNote(string noteName, string userId)

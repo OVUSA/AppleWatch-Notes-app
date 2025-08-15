@@ -38,8 +38,23 @@ namespace AppleWatch_Notes_app.Data
             return true;
         }
 
+        public Note createNote(string userId, string? content, string noteName)
+        {
+            Note newNote = new Note()
+            {
+                Name = noteName,
+                content = content,
+            };
+
+            User currentUser = allUsers.FirstOrDefault(user => user.userId == userId);
+            currentUser.personalNotes.Add(newNote);
+
+            return newNote;
 
 
 
-    }
+
+
+
+        }
 }
