@@ -21,10 +21,24 @@ namespace AppleWatch_Notes_app.Controllers
         }
 
         [HttpGet]
-        public IEnumerable <Note> Get(User userName)
+        public IActionResult Get(User userName)
         {
-            return noteService.allUserNotes(userName.userId);
-
+            IEnumerable<Note> userNotes = noteService.allUserNotes(userName.userId);
+            try
+            {
+                if (userNotes != null)
+                {
+                    return Ok(userNotes);
+                }
+                else
+                {
+                    return NotFound($"No notes with that name were found! Try again.");
+                }
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, "An internal error occurred, contact administarator!");
+            }
 
         }
         [HttpPost]
@@ -47,9 +61,27 @@ namespace AppleWatch_Notes_app.Controllers
             
         }
         [HttpPatch("{noteName}")]
-        public Note Patch(string noteName, User userName)
+        public IActionResult Patch(string noteName, User userName)
         {
-            return noteService.updateNoteByName(noteName,userName.userId);
+            var updatedNote = noteService.updateNoteByName(noteName, userName.userId);
+            try
+            {
+                if (updatedNote != null)
+                {
+                    return Ok(updatedNote);
+                }
+                else
+                {
+                    return NotFound($"Weren't able to update {noteName}. Try again!");
+
+                }
+            }
+
+            catch(Exception ex)
+            {
+                return StatusCode(500, "An internal error occurred while updating the note.");
+            }
+            
         }
 
     }
