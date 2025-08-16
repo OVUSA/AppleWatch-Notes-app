@@ -10,7 +10,7 @@ namespace AppleWatch_Notes_app.Services
     {
         public Note updateNoteByName(string title, string userId);
         public Note createNewNote(string userId, string content, string noteName);
-        public Boolean deleteNote(string noteName, string userId);
+        public void deleteNote(string noteName, string userId);
 
         public IEnumerable<Note> allUserNotes(string userId);
     }
