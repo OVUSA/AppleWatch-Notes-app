@@ -2,59 +2,63 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Data.SQLite;
+using Dapper;
 
 namespace AppleWatch_Notes_app.Data
 {
     public class AppDbContex
     {
-        List<User> allUsers = new List<User>();
-        public  AppDbContex()
+        private readonly string connectionString = "Data Source=mydb.db;Version=3;";
+        private SQLiteConnection connection;
+        public AppDbContex()
         {
-            User user1 = new User("Olya");
-            Note myNote = new Note();
-            myNote.content = "This is the new content for the note.";
+            connection = new SQLiteConnection(connectionString);
+            connection.Open();
 
-            User user2 = new User("Mary");
-            Note user2Notes = new Note();
-            user2.personalNotes.Intersect((IEnumerable<Note>)user2Notes);
-            myNote.Name = "movie recomendations";
-            myNote.content = "1.Constantin 2.The Shining 3.Sleepy Hollow";
+            string createUserTable = @"
+                CREATE TABLE IF NOT EXISTS User (
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Name TEXT NOT NULL )";
+            string createNotesTable = @"
+                CREATE TABLE IF NOT EXISTS Notes (
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Title TEXT NOT NULL,
+                Content TEXT,
+                UserId INTEGER NOT NULL,
+                CreatedAt TEXT NOT NULL,
+                FOREIGN KEY (UserId) REFERENCES Users(Id)
+                )";
 
-            
-            allUsers.Intersect((IEnumerable<User>)user1);
-            allUsers.Intersect((IEnumerable<User>)user2);
+            connection.Execute(createUserTable);
+            connection.Execute(createNotesTable);
 
         }
 
-        public Boolean deleteNote(string noteName, string userId)
+        public void deleteNote(string noteName, string userId)
         {
-            User userWithNote = allUsers.FirstOrDefault(user => user.userId == userId);
-            Note noteToDelete = userWithNote.personalNotes.FirstOrDefault(n => n.Name == noteName);
-            if(noteToDelete!= null)
-            {
-                userWithNote.personalNotes.Remove(noteToDelete);
-            }
-            return true;
+            connection.Query($"DELETE From Notes Where UserId={userId} AND Title = {noteName}");
         }
 
-        public Note createNote(string userId, string? content, string noteName)
+        public Note createNote(string userId, string? content, string noteName, string NoteId)
         {
-            Note newNote = new Note()
-            {
-                Name = noteName,
-                content = content,
-            };
 
-            User currentUser = allUsers.FirstOrDefault(user => user.userId == userId);
-            currentUser.personalNotes.Add(newNote);
-
-            return newNote;
-
-
-
-
-
+            var newNote = connection.Query<Note>(
+                    "INSERT INTO Notes(Title, Content, UserId, CreatedAt) VALUES(@Title, @Content, @UserId, @CreatedAt)",
+                    new { UserId = userId, Content = content,Title = noteName, id = NoteId, CreatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") }
+                    );
+            return (Note)newNote;
 
         }
+
+        public List<Note> getAllNotes(string userId)
+        {
+            var notes = connection.Query<Note>(
+            "SELECT * FROM Notes WHERE UserId = @UserId",
+            new { UserId = userId }
+            ).ToList();
+            return notes;
+
+        }
+    }
 }

@@ -20,12 +20,12 @@ namespace AppleWatch_Notes_app.Services
 
         public Note createNewNote(string userId, string? content, string noteName)
         {
-            return _context.createNote(userId, content, noteName);
+            return _context.createNote(userId, content, noteName,"01");
         }
 
-        public Boolean deleteNote(string noteName, string userId)
+        public void deleteNote(string noteName, string userId)
         {
-            return _context.deleteNote(noteName, userId);
+            _context.deleteNote(noteName, userId);
            
         }
 
