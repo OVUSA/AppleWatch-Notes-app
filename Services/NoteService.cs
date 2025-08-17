@@ -15,7 +15,7 @@ namespace AppleWatch_Notes_app.Services
         }
         public IEnumerable<Note> allUserNotes(string userId)
         {
-            throw new NotImplementedException();
+            return _context.getAllNotes(userId);
         }
 
         public Note createNewNote(string userId, string? content, string noteName)
@@ -31,7 +31,7 @@ namespace AppleWatch_Notes_app.Services
 
         public Note updateNoteByName(string title, string userId)
         {
-            throw new NotImplementedException();
+            return _context.updateExistingNoteByName(title, userId);
         }
 
 
