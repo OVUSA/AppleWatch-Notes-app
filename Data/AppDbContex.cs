@@ -18,11 +18,11 @@ namespace AppleWatch_Notes_app.Data
 
             string createUserTable = @"
                 CREATE TABLE IF NOT EXISTS User (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Id TEXT PRIMARY KEY AUTOINCREMENT,
                 Name TEXT NOT NULL )";
             string createNotesTable = @"
                 CREATE TABLE IF NOT EXISTS Notes (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Id TEXT PRIMARY KEY ,
                 Title TEXT NOT NULL,
                 Content TEXT,
                 UserId INTEGER NOT NULL,
@@ -30,8 +30,30 @@ namespace AppleWatch_Notes_app.Data
                 FOREIGN KEY (UserId) REFERENCES Users(Id)
                 )";
 
+
+            string populateDate = @"
+              INSERT INTO Users (Id, Name)
+                VALUES 
+                    (1, 'Michel'),
+                    (2, 'Misha'),
+                    (3, 'Lindsey'),
+                    (4, 'Sean'),
+                    (5, 'Jade'),
+                    (6, 'Shawn');
+
+             INSERT INTO Notes (Id, Title, Content, UserId, CreateAt)
+                VALUES 
+                    (1-01, 'Movies', 'Constantine,Shutter Island' 1,DateTime.Now),
+                    (1-02, 'Authors', 'Edgar Allan Poe,Howard Phillips Lovecraft' 1,DateTime.Now),
+                    (03, 'Restaurants', 'Tao,S Darling' 1,DateTime.Now),,
+                    (5-01, 'Bars', 'Constantine,Shutter Island' 5,DateTime.Now),
+                    (5-02, 'To-dos', 'Car wash, Call dentist' 5,DateTime.Now),
+                    (4-01, 'Actors', 'CAl Pacino,SKeanu Reeve' 4, DateTime.Now),;";
+
+
             connection.Execute(createUserTable);
             connection.Execute(createNotesTable);
+            connection.Execute(populateDate);
 
         }
 
@@ -42,13 +64,19 @@ namespace AppleWatch_Notes_app.Data
 
         public Note createNote(string userId, string? content, string noteName, string NoteId)
         {
-
             var newNote = connection.Query<Note>(
                     "INSERT INTO Notes(Title, Content, UserId, CreatedAt) VALUES(@Title, @Content, @UserId, @CreatedAt)",
-                    new { UserId = userId, Content = content,Title = noteName, id = NoteId, CreatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") }
+                    new { UserId = userId, Content = content,Title = noteName, id = NoteId, CreatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") },
+                    
+                    );
+
+             var createdNote = connection.Query<Note>(
+                    "INSERT INTO Notes(Title, Content, UserId, CreatedAt) VALUES(@Title, @Content, @UserId, @CreatedAt)",
+                    new { UserId = userId, Content = content, Title = noteName, id = NoteId, CreatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") },
+
+
                     );
             return (Note)newNote;
-
         }
 
         public List<Note> getAllNotes(string userId)

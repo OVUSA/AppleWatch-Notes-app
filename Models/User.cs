@@ -8,14 +8,14 @@ namespace AppleWatch_Notes_app.Models
     public class User
     {
         private string Name;
-        public string userId { get; private set; }
+        public int userId { get; private set; }
         
         public List<Note> personalNotes;
 
         public User(string userName)
         {
             Name = userName;
-            userId =  (userName + generateUserId()).ToString();
+            userId =  generateUserId();
             personalNotes = new List<Note>();
         }
 
