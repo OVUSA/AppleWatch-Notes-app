@@ -8,7 +8,7 @@ namespace AppleWatch_Notes_app.Models
     public class User
     {
         private string Name;
-        public int userId { get; private set; }
+        public string userId { get; private set; }
         
         public List<Note> personalNotes;
 
@@ -20,10 +20,10 @@ namespace AppleWatch_Notes_app.Models
         }
 
 
-        public int generateUserId()
+        public string generateUserId()
         {
             Random random = new Random();
-            return random.Next(100);
+            return random.Next(100).ToString();
         }
 
     }

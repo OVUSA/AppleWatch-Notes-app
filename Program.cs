@@ -23,4 +23,7 @@ namespace AppleWatch_Notes_app
                     webBuilder.UseStartup<Startup>();
                 });
     }
+
+
 }
+

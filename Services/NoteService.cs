@@ -9,9 +9,9 @@ namespace AppleWatch_Notes_app.Services
     {
         private readonly AppDbContex _context;
 
-        public NoteService(AppDbContex context)
+        public NoteService()
         {
-            _context = context;
+            _context = new AppDbContex();
         }
         public IEnumerable<Note> allUserNotes(string userId)
         {
@@ -20,13 +20,15 @@ namespace AppleWatch_Notes_app.Services
 
         public Note createNewNote(string userId, string? content, string noteName)
         {
-            return _context.createNote(userId, content, noteName,"01");
+            _context.createNote(userId, content, noteName,"01");
+            return getNoteByName(noteName, userId);
+
         }
 
-        public void deleteNote(string noteName, string userId)
+        public string deleteNote(string noteName, string userId)
         {
             _context.deleteNote(noteName, userId);
-           
+            return $"Note {noteName} is successfully deleted.";         
         }
 
         public Note updateNoteByName(string title, string userId, string content)

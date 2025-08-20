@@ -18,7 +18,7 @@ namespace AppleWatch_Notes_app.Data
 
             string createUserTable = @"
                 CREATE TABLE IF NOT EXISTS User (
-                Id TEXT PRIMARY KEY AUTOINCREMENT,
+                Id TEXT PRIMARY KEY,
                 Name TEXT NOT NULL )";
             string createNotesTable = @"
                 CREATE TABLE IF NOT EXISTS Notes (
@@ -53,7 +53,7 @@ namespace AppleWatch_Notes_app.Data
 
             connection.Execute(createUserTable);
             connection.Execute(createNotesTable);
-            connection.Execute(populateDate);
+           connection.Execute(populateDate);
 
         }
 
@@ -62,16 +62,16 @@ namespace AppleWatch_Notes_app.Data
             connection.Query($"DELETE From Notes Where UserId={userId} AND Title = {noteName}");
         }
 
-        public Note createNote(string userId, string? content, string noteName, string NoteId)
+        public void createNote(string userId, string? content, string noteName, string NoteId)
         {
             var newNote = connection.Query<Note>(
                     "INSERT INTO Notes(Title, Content, UserId, CreatedAt) VALUES(@Title, @Content, @UserId, @CreatedAt)",
                     new { UserId = userId, Content = content, Title = noteName, id = NoteId, CreatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")});
 
-            var createdNote = connection.Query<Note>(
-                   "INSERT INTO Notes(Title, Content, UserId, CreatedAt) VALUES(@Title, @Content, @UserId, @CreatedAt)",
-                   new { UserId = userId, Content = content, Title = noteName, id = NoteId, CreatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")});
-            return (Note)newNote;
+         //   var createdNote = connection.Query<Note>(
+             //      "INSERT INTO Notes(Title, Content, UserId, CreatedAt) VALUES(@Title, @Content, @UserId, @CreatedAt)",
+               //    new { UserId = userId, Content = content, Title = noteName, id = NoteId, CreatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")});
+            
         }
 
         public List<Note> getAllNotes(string userId)
@@ -84,8 +84,12 @@ namespace AppleWatch_Notes_app.Data
         }
         public Note getNoteByName(string title, string userId)
         {
-            return (Note)connection.Query<Note>(
-                $"Select * from Notes WHERE Title = {title} and UserId = {userId}");
+            var note = connection.Query<Note>(
+          "SELECT * FROM Notes WHERE Title = @Title AND UserId = @UserId",
+          new { Title = title, UserId = userId }
+                 ).FirstOrDefault(); 
+
+            return note;
         }
 
         public void updateNoteByName(string title, string userId, string content)
