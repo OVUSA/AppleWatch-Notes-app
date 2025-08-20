@@ -8,10 +8,11 @@ namespace AppleWatch_Notes_app.Services
 {
     interface INoteService
     {
-        public Note updateNoteByName(string title, string userId);
+        public Note updateNoteByName(string title, string userId, string content);
         public Note createNewNote(string userId, string content, string noteName);
         public void deleteNote(string noteName, string userId);
 
         public IEnumerable<Note> allUserNotes(string userId);
+        public Note getNoteByName(string title, string userId);
     }
 }

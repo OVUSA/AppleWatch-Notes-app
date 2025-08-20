@@ -66,16 +66,11 @@ namespace AppleWatch_Notes_app.Data
         {
             var newNote = connection.Query<Note>(
                     "INSERT INTO Notes(Title, Content, UserId, CreatedAt) VALUES(@Title, @Content, @UserId, @CreatedAt)",
-                    new { UserId = userId, Content = content,Title = noteName, id = NoteId, CreatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") },
-                    
-                    );
+                    new { UserId = userId, Content = content, Title = noteName, id = NoteId, CreatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")});
 
-             var createdNote = connection.Query<Note>(
-                    "INSERT INTO Notes(Title, Content, UserId, CreatedAt) VALUES(@Title, @Content, @UserId, @CreatedAt)",
-                    new { UserId = userId, Content = content, Title = noteName, id = NoteId, CreatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") },
-
-
-                    );
+            var createdNote = connection.Query<Note>(
+                   "INSERT INTO Notes(Title, Content, UserId, CreatedAt) VALUES(@Title, @Content, @UserId, @CreatedAt)",
+                   new { UserId = userId, Content = content, Title = noteName, id = NoteId, CreatedAt = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")});
             return (Note)newNote;
         }
 
@@ -86,7 +81,16 @@ namespace AppleWatch_Notes_app.Data
             new { UserId = userId }
             ).ToList();
             return notes;
+        }
+        public Note getNoteByName(string title, string userId)
+        {
+            return (Note)connection.Query<Note>(
+                $"Select * from Notes WHERE Title = {title} and UserId = {userId}");
+        }
 
+        public void updateNoteByName(string title, string userId, string content)
+        {
+            connection.Query<Note>($"Update Notes Set content = {content} Where title = {title} and userId = {userId}");
         }
     }
 }

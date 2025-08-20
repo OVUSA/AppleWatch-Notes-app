@@ -29,11 +29,16 @@ namespace AppleWatch_Notes_app.Services
            
         }
 
-        public Note updateNoteByName(string title, string userId)
+        public Note updateNoteByName(string title, string userId, string content)
         {
-            return _context.updateExistingNoteByName(title, userId);
+            _context.updateNoteByName(title, userId, content);
+            return getNoteByName(title, userId);
         }
 
+        public Note getNoteByName(string title, string userId)
+        {
+            return _context.getNoteByName(title, userId);
+        }
 
     }
 }
