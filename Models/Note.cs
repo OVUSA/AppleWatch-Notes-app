@@ -7,11 +7,11 @@ namespace AppleWatch_Notes_app.Models
 {
     public class Note
     {
-        public string Name { get; set; } = "Not Defined";
+        public string Name { get; set; }
         public DateTime date { get; set; } = DateTime.Now;
-        public string content { get; set; } = " ";
+        public string content { get; set; }
 
-        private string SourceDevice { get; set; } = "Siri";
+        //private string SourceDevice { get; set; } = "Siri";
 
       
     }

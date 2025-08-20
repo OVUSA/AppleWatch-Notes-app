@@ -15,15 +15,15 @@ namespace AppleWatch_Notes_app.Models
         public User(string userName)
         {
             Name = userName;
-            userId =  (userName + generateUserId()).ToString();
+            userId =  generateUserId();
             personalNotes = new List<Note>();
         }
 
 
-        public int generateUserId()
+        public string generateUserId()
         {
             Random random = new Random();
-            return random.Next(100);
+            return random.Next(100).ToString();
         }
 
     }
