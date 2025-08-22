@@ -16,45 +16,52 @@ namespace AppleWatch_Notes_app.Data
             connection = new SQLiteConnection(connectionString);
             connection.Open();
 
+           
             string createUserTable = @"
-                CREATE TABLE IF NOT EXISTS User (
-                Id TEXT PRIMARY KEY,
-                Name TEXT NOT NULL )";
+        CREATE TABLE IF NOT EXISTS Users (
+            Id TEXT PRIMARY KEY,
+            Name TEXT NOT NULL )";
+
             string createNotesTable = @"
-                CREATE TABLE IF NOT EXISTS Notes (
-                Id TEXT PRIMARY KEY ,
-                Title TEXT NOT NULL,
-                Content TEXT,
-                UserId INTEGER NOT NULL,
-                CreatedAt TEXT NOT NULL,
-                FOREIGN KEY (UserId) REFERENCES Users(Id)
-                )";
+        CREATE TABLE IF NOT EXISTS Notes (
+            Id TEXT PRIMARY KEY ,
+            Title TEXT NOT NULL,
+            Content TEXT,
+            UserId TEXT NOT NULL, 
+            CreatedAt TEXT NOT NULL,
+            FOREIGN KEY (UserId) REFERENCES Users(Id)
+            )";
 
+            // Use a date format compatible with SQLite
+            string populateData = @"
+        INSERT INTO Users (Id, Name)
+        VALUES
+            ('001', 'Michel'),
+            ('002', 'Misha'),
+            ('003', 'Lindsey'),
+            ('004', 'Sean');
 
-            string populateDate = @"
-              INSERT INTO Users (Id, Name)
-                VALUES 
-                    (1, 'Michel'),
-                    (2, 'Misha'),
-                    (3, 'Lindsey'),
-                    (4, 'Sean'),
-                    (5, 'Jade'),
-                    (6, 'Shawn');
+        INSERT INTO Notes (Id, Title, Content, UserId, CreatedAt)
+        VALUES
+            ('1-01', 'Movies', 'Constantine,Shutter Island', '001', '2025-08-21 23:14:07'),
+            ('1-02', 'Authors', 'Edgar Allan Poe,Howard Phillips Lovecraft', '002', '2025-08-21 23:14:07'),
+            ('03', 'Restaurants', 'Tao,S Darling', '001', '2025-08-21 23:14:07'),
+            ('5-01', 'Bars', 'Constantine,Shutter Island', '002', '2025-08-21 23:14:07'),
+            ('5-02', 'To-dos', 'Car wash, Call dentist', '003', '2025-08-21 23:14:07'),
+            ('4-01', 'Actors', 'Al Pacino,Keanu Reeves', '004', '2025-08-21 23:14:07');";
 
-             INSERT INTO Notes (Id, Title, Content, UserId, CreateAt)
-                VALUES 
-                    (1-01, 'Movies', 'Constantine,Shutter Island' 1,DateTime.Now),
-                    (1-02, 'Authors', 'Edgar Allan Poe,Howard Phillips Lovecraft' 1,DateTime.Now),
-                    (03, 'Restaurants', 'Tao,S Darling' 1,DateTime.Now),,
-                    (5-01, 'Bars', 'Constantine,Shutter Island' 5,DateTime.Now),
-                    (5-02, 'To-dos', 'Car wash, Call dentist' 5,DateTime.Now),
-                    (4-01, 'Actors', 'CAl Pacino,SKeanu Reeve' 4, DateTime.Now),;";
+          //  connection.Execute(createUserTable);
+         //   connection.Execute(createNotesTable);
 
+            try
+            {
+               // connection.Execute(populateData);
+            }
+            catch (System.Data.SQLite.SQLiteException ex)
+            {
 
-            connection.Execute(createUserTable);
-            connection.Execute(createNotesTable);
-           connection.Execute(populateDate);
-
+                Console.WriteLine($"Population failed: {ex.Message}");
+            }
         }
 
         public void deleteNote(string noteName, string userId)
@@ -85,7 +92,10 @@ namespace AppleWatch_Notes_app.Data
         public Note getNoteByName(string title, string userId)
         {
             var note = connection.Query<Note>(
-          "SELECT * FROM Notes WHERE Title = @Title AND UserId = @UserId",
+          "SELECT title AS Title, " +
+          "createdAt as date, " +
+          "content as content " +
+          "From Notes WHERE Title = @Title AND UserId = @UserId",
           new { Title = title, UserId = userId }
                  ).FirstOrDefault(); 
 
