@@ -2,6 +2,7 @@
 using AppleWatch_Notes_app.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AppleWatch_Notes_app.Services
 {
@@ -18,16 +19,22 @@ namespace AppleWatch_Notes_app.Services
             return _context.getAllNotes(userId);
         }
 
-        public Note createNewNote(string userId, string? content, string noteName)
-        {
-            _context.createNote(userId, content, noteName,"01");
-            return getNoteByName(noteName, userId);
+        public Note createNewNote(string noteTitle, string content, string userId) {
 
+
+            string noteId = (allUserNotes(userId).Count()+1).ToString();
+
+            DateTime createdAt = DateTime.Now;
+            _context.createNote(userId, content, noteTitle,userId+noteId, createdAt.ToString());
+
+            return getNoteByTitle(noteTitle, userId);
         }
+    
+  
 
-        public string deleteNote(string noteName, string userId)
+        public string deleteNote(string noteName, string userId, string noteId)
         {
-            _context.deleteNote(noteName, userId);
+            _context.deleteNote(noteName, userId, noteId);
             return $"Note {noteName} is successfully deleted.";         
         }
 
@@ -36,10 +43,10 @@ namespace AppleWatch_Notes_app.Services
 
             string[] contentlist = content.Split(",");
             _context.updateNoteByName(title, userId, contentlist);
-            return getNoteByName(title, userId);
+            return getNoteByTitle(title, userId);
         }
 
-        public Note getNoteByName(string title, string userId)
+        public Note getNoteByTitle(string title, string userId)
         {
             return _context.getNoteByName(title, userId);
         }
