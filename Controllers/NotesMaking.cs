@@ -49,9 +49,9 @@ namespace AppleWatch_Notes_app.Controllers
         }
 
         [HttpDelete]
-        public string Delete(string noteName, User userName)
+        public string Delete(string noteName, string userName)
         {
-           return noteService.deleteNote(noteName, userName.userId);
+           return noteService.deleteNote(noteName, userName);
             
         }
         [HttpPatch("{noteName}")]
