@@ -7,7 +7,7 @@ namespace AppleWatch_Notes_app.Models
 {
     public class Note
     {
-        public string Name { get; set; }
+        public string Title { get; set; }
         public DateTime date { get; set; } = DateTime.Now;
         public string content { get; set; }
 

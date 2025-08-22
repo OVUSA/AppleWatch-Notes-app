@@ -33,7 +33,9 @@ namespace AppleWatch_Notes_app.Services
 
         public Note updateNoteByName(string title, string userId, string content)
         {
-            _context.updateNoteByName(title, userId, content);
+
+            string[] contentlist = content.Split(",");
+            _context.updateNoteByName(title, userId, contentlist);
             return getNoteByName(title, userId);
         }
 
