@@ -102,9 +102,16 @@ namespace AppleWatch_Notes_app.Data
             return note;
         }
 
-        public void updateNoteByName(string title, string userId, string content)
+        public void updateNoteByName(string title, string userId, string[] content)
         {
-            connection.Query<Note>($"Update Notes Set content = {content} Where title = {title} and userId = {userId}");
+           
+            string joinedContent = string.Join(",", content);
+
+            //  Use a parameterized query with 'connection.Execute' for the update
+            connection.Execute(
+                "UPDATE Notes SET Content = @JoinedContent WHERE Title = @Title AND UserId = @UserId",
+                new { JoinedContent = joinedContent, Title = title, UserId = userId }
+            );
         }
     }
 }
