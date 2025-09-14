@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using AppleWatch_Notes_app.Models;
 using AppleWatch_Notes_app.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AppleWatch_Notes_app.Controllers
 {
@@ -20,7 +21,7 @@ namespace AppleWatch_Notes_app.Controllers
             _logger = logger;
            noteService = new NoteService();
         }
-
+        [Authorize]
         [HttpGet("{userId}")]
         public IActionResult Get(string userId)
         {
@@ -42,18 +43,21 @@ namespace AppleWatch_Notes_app.Controllers
             }
 
         }
+        [Authorize]
         [HttpPost]
         public Note Post(string noteName, string? content, [FromQuery]string userName)
         {
            return noteService.createNewNote(noteName,content,userName );
         }
 
+        [Authorize]
         [HttpDelete]
         public string Delete(string noteName, User userName)
         {
            return noteService.deleteNote(noteName, userName.userId);
             
         }
+        [Authorize]
         [HttpPatch("{noteName}")]
         public IActionResult Patch(string noteName, [FromQuery] string userId, [FromBody] string content)
         {
