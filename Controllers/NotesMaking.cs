@@ -45,23 +45,23 @@ namespace AppleWatch_Notes_app.Controllers
         }
         [Authorize]
         [HttpPost]
-        public Note Post(string noteName, string? content, [FromQuery]string userName)
+        public Note Post(string noteTitle, [FromQuery] string? content, string userId)
         {
-           return noteService.createNewNote(noteName,content,userName );
+           return noteService.createNewNote(noteTitle,content,userId);
         }
 
         [Authorize]
         [HttpDelete]
-        public string Delete(string noteName, User userName)
+        public string Delete(string noteTitle, string userId, string noteId)
         {
-           return noteService.deleteNote(noteName, userName.userId);
+           return noteService.deleteNote(noteTitle, userId, noteId);
             
         }
         [Authorize]
         [HttpPatch("{noteName}")]
-        public IActionResult Patch(string noteName, [FromQuery] string userId, [FromBody] string content)
+        public IActionResult Patch(string noteName, [FromQuery] string userId, [FromBody] string content, string? nodeId)
         {
-            var updatedNote = noteService.updateNoteByName(noteName, userId, content);
+            var updatedNote = noteService.updateNoteByName(noteName, userId, content, nodeId);
             try
             {
                 if (updatedNote != null)
