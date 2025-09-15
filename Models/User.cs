@@ -7,18 +7,20 @@ namespace AppleWatch_Notes_app.Models
 {
     public class User
     {
-        private string Name;
-        public string userId { get; private set; }
+        public string Name { get;  set; }
+        public string userId { get; set; }
         
         public List<Note> personalNotes;
+        public string PasswordHash { get; set; }
 
-        public User(string userName)
-        {
+        public User(string userName, string userID)
+        { 
             Name = userName;
-            userId =  generateUserId();
+            userId = userID;
             personalNotes = new List<Note>();
+            
         }
-
+        public User() { }
 
         public string generateUserId()
         {
