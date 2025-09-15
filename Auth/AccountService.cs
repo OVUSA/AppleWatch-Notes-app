@@ -12,7 +12,8 @@ namespace AppleWatch_Notes_app.Auth
 
     {
         UserRepository userRepository = new UserRepository();
-        public AccountService(UserRepository userRepository)
+        JwtService jwtService = new JwtService();
+        public AccountService()
         {
             
         }
@@ -29,11 +30,20 @@ namespace AppleWatch_Notes_app.Auth
             userRepository.Add(user);
         }
 
-    public void Login(string userName, string password)
+    public string Login(string userName, string password)
         {
             var user = userRepository.GetByUserName(userName);
-            new PasswordHasher<User>()
+            var result =  new PasswordHasher<User>()
                 .VerifyHashedPassword(user, user.PasswordHash, password);
+
+            if(result == PasswordVerificationResult.Success)
+            {
+               return jwtService.GenerateToken(user);
+            }
+            else
+            {
+                throw new Exception("Unauthorized");
+            }
         }
     }
 }

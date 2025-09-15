@@ -1,3 +1,4 @@
+using AppleWatch_Notes_app.Auth;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +22,8 @@ namespace AppleWatch_Notes_app
         {
             services.AddControllers();
             services.AddSwaggerGen();
+            services.AddScoped<JwtService>();
+            services.AddScoped<AccountService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

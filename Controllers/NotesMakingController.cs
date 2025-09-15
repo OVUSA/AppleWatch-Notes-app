@@ -10,13 +10,13 @@ namespace AppleWatch_Notes_app.Controllers
 {
     [ApiController]
     [Route("notes")]
-    public class NotesMaking : ControllerBase
+    public class NotesMakingController : ControllerBase
     {
 
-        private readonly ILogger<NotesMaking> _logger;
+        private readonly ILogger<NotesMakingController> _logger;
         private readonly INoteService noteService;
 
-        public NotesMaking(ILogger<NotesMaking> logger)
+        public NotesMakingController(ILogger<NotesMakingController> logger)
         {
             _logger = logger;
            noteService = new NoteService();
